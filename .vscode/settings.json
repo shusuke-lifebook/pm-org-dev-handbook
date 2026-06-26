@@ -1,0 +1,36 @@
+{
+  // --- フォーマット設定 ---
+  "editor.formatOnSave": true,
+  "editor.renderWhitespace": "all",
+  "editor.renderControlCharacters": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit"
+  },
+
+  // --- ファイル関連 ---
+  "files.eol": "\n",
+  "files.encoding": "utf8",
+
+  // --- VSCode UI カスタマイズ ---
+  "workbench.iconTheme": "vscode-icons",
+  "workbench.colorTheme": "Monokai",
+
+  // --- git の設定 ---
+  "git.autofetch": true,
+  "git.autofetchPeriod": 180,
+
+  // --- Markdown 専用設定 ---
+  "[markdown]": {
+    "editor.insertSpaces": true,
+    "editor.inlineSuggest.enabled": false,
+    "editor.tabSize": 2,
+    "editor.wordWrap": "on",
+    "editor.quickSuggestions": {
+      "other": false,
+      "comments": false,
+      "strings": false
+    },
+    "editor.renderWhitespace": "boundary",
+    "editor.defaultFormatter": "yzhang.markdown-all-in-one"
+  }
+}

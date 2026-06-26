@@ -1,0 +1,20 @@
+{
+  "recommendations": [
+    // --- Markdown 基本 ---
+    "yzhang.markdown-all-in-one", // Markdown All in One（必須）
+    "davidanson.vscode-markdownlint", // MarkdownLint（品質チェック）
+    // "bierner.markdown-preview-github-styles", // GitHub風プレビュー
+
+    // --- 補助ツール ---
+    "esbenp.prettier-vscode", // Prettier（必要ならMarkdown整形）
+    // "streetsidesoftware.code-spell-checker", // 英文スペルチェック
+
+    // --- 図表・可視化 ---
+    "hediet.vscode-drawio", // draw.io 図作成
+    // "bierner.markdown-mermaid",       // Mermaid 図表サポート
+
+    // --- Git 連携 ---
+    "mhutchie.git-graph" // Git Graph（視覚的履歴）
+    // "eamodio.gitlens"                 // GitLens（詳細な Git 情報）
+  ]
+}
