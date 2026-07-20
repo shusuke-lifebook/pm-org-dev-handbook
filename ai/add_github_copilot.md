@@ -465,3 +465,37 @@
 | ------------------ | ------------- |
 | gh copilot suggest | 自然言語からコマンドを作成 |
 | gh copilot explain | コマンドを自然言語で説明  |
+
+- **実践例：コマンド生成**
+
+- ```
+  # 自然言語でコマンドを生成
+  copilot -p "5日以上古いDockerイメージをすべて削除する"
+  
+  
+  shusuke@DESKTOP-3ACKOMV:~$ copilot -p "5日以上古いDockerイメージをすべて削除する"
+  Dockerイメージの一覧を確認し、作成から5日以上経過したイメージを削除します。
+  
+  ✗ List docker images with creation dates (shell)
+    │ docker images --format '{{.ID}}\t{{.Repository}}:{{.Tag}}\t{{.CreatedAt}}' 2>&1 | head -50
+    └ Permission denied and could not request permission from user
+  
+  ● Check docker availability and permissions (shell)
+    │ which docker; groups; id
+    └ 4 lines…
+  
+  dockerグループには所属していますが、コマンド実行の権限が拒否されました。この操作にはシステムへの権限が必要で、現在の環境ではブロックされています。手動で以下を実行してください。
+  
+  ```bash
+  docker image prune -a --filter "until=120h" -f
+  ```
+  
+  これで作成から5日（120時間）以上経過した未使用イメージがすべて削除されます。実行権限の問題を解決してから再度お試しいただくか、権限昇格が可能であればお知らせください。
+  
+  
+  
+  Changes    +0 -0
+  AI Credits 7.34 (16s)
+  Tokens     ↑ 70.5k (46.8k cached, 23.8k written) • ↓ 465 (48 reasoning)
+  Resume     copilot --resume=bce4f1c8-4348-4bd1-a4b8-f3765ec56a9e
+  ```
