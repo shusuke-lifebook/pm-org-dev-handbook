@@ -160,5 +160,14 @@ Project ready.
 
 ## 5. Spec Kitの仕組み
 
+## 6. プロジェクト原則の設定
+- sepckit.constifution
+  - プロジェクトの「憲法(Consitution)」を定める。これは開発における交渉不可能な原則です。
+    - 原則1 「t_wadaのTDDなど人名と手法を書くことでプロンプトでの説明を抽象化」
+    - 原則2 「UIUXの一貫、技術スタッフ、コード規則を記載」
+    - 原則3 「.github/copilot-instrctions.mdなどツール特有の原則ファイルを作成することで指示を堅牢にする」
+    - 原則4 「言語の指定」
+  - AIはこの原則を常に参照し、違反するコード生成を防ぎます。
+
 ## 999.リンク
 - [Spec Kit](https://github.com/github/spec-kit)
