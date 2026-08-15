@@ -56,8 +56,6 @@
   - MCPの能力に「使い方の知識」を加える
     - Figma
 
----
-
 ## 1.2 Instructionsとの違い
 - カスタム命令(Custom Instruction)とは
   - AIの「基本方針(振る舞い・好み)」を継続的に効かせるための指示
@@ -109,8 +107,11 @@
     - 競合ではなく補完関係
     - 両方を組み合わせて効果を最大化
 
+---
+
 # 2. Agent Skillsの利用
 - Agent Skillsの使い方を学び、いくつか公開Skillをサンプルとして利用
+
 
 ## 2.1 Skillリポジトリ
 - [Anthropic Skills](https://github.com/anthropics/skills)
@@ -135,3 +136,12 @@
     - Authoripic Skills
     - GiHub Awesome Copilot
     - Microsoft Agent Skills ・・・など
+
+
+## 2.2 skills/pptxの利用
+- WSL2上のプロジェクトディレクトリに.agents/skillsにpptxを配置
+- チャットで以下を実行
+  - /pptx Gitの使い方を初心者に紹介するスライドを作って
+
+## 2.3 Agent Skillsの仕様
+
