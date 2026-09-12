@@ -388,4 +388,14 @@
 - SKILL.mdに基本情報を実装
 - 動作確認
 
+### 3.4 ログ分析の実装
+1. ログフィルタリングするスクリプト作成
+   1. analyze-aplog.js
+   2. analyze-lblog.js
+2. ログ分析に関する参照情報を準備
+   1. analysis-guide.md
+   2. log-spec.md
+3. SKILL.mdを修正
+4. 動作確認
+
 # 4. Agent Skillsのアイディア出し
