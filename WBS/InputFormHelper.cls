@@ -1,3 +1,4 @@
+Attribute VB_Name = "InputFormHelper"
 Option Explicit
 
 Private form As Object
@@ -19,76 +20,69 @@ Private txtNote As MSForms.TextBox
 
 Public Function ShowForTask(ByVal targetRow As Long, ByVal taskType As String) As Boolean
     Dim ws As Worksheet
-    Dim defaultDuration As String
-    Dim defaultProgress As String
-    Dim labelTitle As String
-    Dim i As Long
 
     selectedRow = targetRow
     selectedTaskType = taskType
     isCancelled = False
-
     Set ws = Worksheets("WBS")
-    EnsureForm
+
     Set form = UserForms.Add("WBSInputForm")
-    form.Caption = "WBS“ü—Í•â•"
+    form.Caption = "WBSï¿½ï¿½ï¿½Í•â•"
     form.Width = 440
     form.Height = 380
     form.StartUpPosition = 1
 
-    AddLabel "lblTitle", "“ü—Í•â•", 20, 12, 200, 18
-    AddLabel "lblTaskName", "ƒ^ƒXƒN–¼", 20, 42, 90, 18
+    AddLabel "lblTitle", "WBSï¿½ï¿½ï¿½Í•â•", 20, 12, 200, 18
+    AddLabel "lblTaskName", "ï¿½^ï¿½Xï¿½Nï¿½ï¿½", 20, 42, 90, 18
     Set txtTaskName = AddTextBox("txtTaskName", 120, 36, 280, 24)
     txtTaskName.Text = CStr(ws.Cells(selectedRow, 3).Value)
 
-    AddLabel "lblOwner", "’S“–", 20, 74, 90, 18
+    AddLabel "lblOwner", "ï¿½Sï¿½ï¿½", 20, 74, 90, 18
     Set txtOwner = AddTextBox("txtOwner", 120, 68, 280, 24)
     txtOwner.Text = CStr(ws.Cells(selectedRow, 4).Value)
 
-    AddLabel "lblType", "í•Ê", 20, 106, 90, 18
+    AddLabel "lblType", "ï¿½ï¿½ï¿½", 20, 106, 90, 18
     Set txtType = AddComboBox("cmbType", 120, 100, 280, 24)
-    txtType.AddItem "ƒtƒF[ƒY"
-    txtType.AddItem "ƒ^ƒXƒN"
-    txtType.AddItem "ƒ}ƒCƒ‹ƒXƒg[ƒ“"
+    txtType.AddItem "ï¿½tï¿½Fï¿½[ï¿½Y"
+    txtType.AddItem "ï¿½^ï¿½Xï¿½N"
+    txtType.AddItem "ï¿½}ï¿½Cï¿½ï¿½ï¿½Xï¿½gï¿½[ï¿½ï¿½"
     txtType.Text = selectedTaskType
     txtType.Enabled = False
 
-    AddLabel "lblStart", "ŠJn“ú", 20, 138, 90, 18
+    AddLabel "lblStart", "ï¿½Jï¿½nï¿½ï¿½", 20, 138, 90, 18
     Set txtStart = AddTextBox("txtStart", 120, 132, 280, 24)
     If IsDate(ws.Cells(selectedRow, 6).Value) Then
         txtStart.Text = Format$(ws.Cells(selectedRow, 6).Value, "yyyy/m/d")
     End If
 
-    AddLabel "lblDuration", "“ú”", 20, 170, 90, 18
+    AddLabel "lblDuration", "ï¿½ï¿½ï¿½ï¿½", 20, 170, 90, 18
     Set txtDuration = AddTextBox("txtDuration", 120, 164, 280, 24)
     If IsNumeric(ws.Cells(selectedRow, 7).Value) Then
         txtDuration.Text = CStr(ws.Cells(selectedRow, 7).Value)
     End If
-    If selectedTaskType = "ƒ}ƒCƒ‹ƒXƒg[ƒ“" Then
-        txtDuration.Text = "1"
-    End If
+    If selectedTaskType = "ï¿½}ï¿½Cï¿½ï¿½ï¿½Xï¿½gï¿½[ï¿½ï¿½" Then txtDuration.Text = "1"
 
-    AddLabel "lblProgress", "i’»—¦", 20, 202, 90, 18
+    AddLabel "lblProgress", "ï¿½iï¿½ï¿½ï¿½ï¿½(%)", 20, 202, 90, 18
     Set txtProgress = AddTextBox("txtProgress", 120, 196, 280, 24)
     If IsNumeric(ws.Cells(selectedRow, 11).Value) Then
         txtProgress.Text = Format$(ws.Cells(selectedRow, 11).Value * 100, "0")
     End If
-    If selectedTaskType = "ƒ}ƒCƒ‹ƒXƒg[ƒ“" Then
+    If selectedTaskType = "ï¿½}ï¿½Cï¿½ï¿½ï¿½Xï¿½gï¿½[ï¿½ï¿½" Then
         txtProgress.Visible = False
         form.Controls("lblProgress").Visible = False
     End If
 
-    AddLabel "lblPredecessor", "æsID", 20, 234, 90, 18
+    AddLabel "lblPredecessor", "ï¿½ï¿½sID", 20, 234, 90, 18
     Set txtPredecessor = AddTextBox("txtPredecessor", 120, 228, 280, 24)
     txtPredecessor.Text = CStr(ws.Cells(selectedRow, 12).Value)
 
-    AddLabel "lblNote", "”õl", 20, 266, 90, 18
+    AddLabel "lblNote", "ï¿½ï¿½ï¿½l", 20, 266, 90, 18
     Set txtNote = AddTextBox("txtNote", 120, 260, 280, 54)
     txtNote.MultiLine = True
     txtNote.Text = CStr(ws.Cells(selectedRow, 16).Value)
 
-    Set okButton = AddCommandButton("cmdOK", "“ü—Í‚·‚é", 210, 330, 90, 26)
-    Set cancelButton = AddCommandButton("cmdCancel", "ƒLƒƒƒ“ƒZƒ‹", 320, 330, 90, 26)
+    Set okButton = AddCommandButton("cmdOK", "ï¿½ï¿½ï¿½Í‚ï¿½ï¿½ï¿½", 210, 330, 90, 26)
+    Set cancelButton = AddCommandButton("cmdCancel", "ï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½Zï¿½ï¿½", 320, 330, 90, 26)
 
     form.Show
 
@@ -104,18 +98,6 @@ Public Function ShowForTask(ByVal targetRow As Long, ByVal taskType As String) A
     Set form = Nothing
     ShowForTask = True
 End Function
-
-Private Sub EnsureForm()
-    Dim component As VBComponent
-    For Each component In ThisWorkbook.VBProject.VBComponents
-        If component.Name = "WBSInputForm" Then
-            Exit Sub
-        End If
-    Next component
-
-    Set component = ThisWorkbook.VBProject.VBComponents.Add(vbext_ct_MSForm)
-    component.Name = "WBSInputForm"
-End Sub
 
 Private Function AddLabel(ByVal name As String, ByVal caption As String, ByVal left As Single, ByVal top As Single, ByVal width As Single, ByVal height As Single) As MSForms.Label
     Dim ctrl As MSForms.Label
@@ -173,13 +155,11 @@ Private Sub ApplyValues(ByVal taskType As String)
         ws.Cells(selectedRow, 6).Value = CDate(txtStart.Text)
     End If
 
-    If Len(Trim$(txtDuration.Text)) > 0 Then
-        If IsNumeric(txtDuration.Text) Then
-            durationValue = CDbl(txtDuration.Text)
-            If taskType = "ƒ}ƒCƒ‹ƒXƒg[ƒ“" And durationValue <= 0 Then durationValue = 1
-            ws.Cells(selectedRow, 7).Value = durationValue
-        End If
-    ElseIf taskType = "ƒ}ƒCƒ‹ƒXƒg[ƒ“" Then
+    If Len(Trim$(txtDuration.Text)) > 0 And IsNumeric(txtDuration.Text) Then
+        durationValue = CDbl(txtDuration.Text)
+        If taskType = "ï¿½}ï¿½Cï¿½ï¿½ï¿½Xï¿½gï¿½[ï¿½ï¿½" And durationValue <= 0 Then durationValue = 1
+        ws.Cells(selectedRow, 7).Value = durationValue
+    ElseIf taskType = "ï¿½}ï¿½Cï¿½ï¿½ï¿½Xï¿½gï¿½[ï¿½ï¿½" Then
         ws.Cells(selectedRow, 7).Value = 1
     End If
 
@@ -194,7 +174,7 @@ End Sub
 
 Private Sub okButton_Click()
     If Len(Trim$(txtTaskName.Text)) = 0 Then
-        MsgBox "ƒ^ƒXƒN–¼‚ğ“ü—Í‚µ‚Ä‚­‚¾‚³‚¢B", vbExclamation
+        MsgBox "ï¿½^ï¿½Xï¿½Nï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í‚ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B", vbExclamation
         Exit Sub
     End If
     isCancelled = False
