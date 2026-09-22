@@ -6,7 +6,7 @@ import xlsxwriter
 ROOT = Path(__file__).resolve().parent
 OUTPUT = ROOT / "開発マイルストーン_WBS.xlsx"
 DATE_START = date(2026, 10, 1)
-DATE_COUNT = 120
+DATE_COUNT = 366
 TASK_START = 5
 TASK_END = 104
 CALENDAR_START_COL = 17
@@ -53,16 +53,18 @@ def build_workbook():
 
     settings.hide_gridlines(2)
     settings.write("A1", "開発マイルストーン WBS", workbook.add_format({"bold": True, "font_size": 18, "font_color": navy}))
-    settings.write_column("A3:A7", ["プロジェクト名", "基準日", "ガント表示日数", "週末設定", "今日の日付"], label)
+    settings.write_column("A3:A8", ["プロジェクト名", "開始月", "終了月", "週末設定", "今日の日付", "入力補助"], label)
     settings.write("B3", "サンプル開発プロジェクト")
     settings.write_datetime("B4", DATE_START, workbook.add_format({"num_format": "yyyy/m/d"}))
-    settings.write_number("B5", DATE_COUNT)
+    settings.write_datetime("B5", date(2027, 3, 1), workbook.add_format({"num_format": "yyyy/m"}))
     settings.write("B6", "土日休み")
     settings.write_formula("B7", "=TODAY()", workbook.add_format({"num_format": "yyyy/m/d"}))
+    settings.write("B8", "WBSで入力ダイアログを実行")
     settings.write("D3", "操作", label)
-    settings.write("D4", "入力後、VBAの RefreshWBS を実行するとガント・終了日・遅れが再計算されます。")
+    settings.write("D4", "開始月・終了月を変更すると、ガントの日付範囲が連動します。")
     settings.write("D5", "VBAの AddWBSRow で入力行を追加できます。")
-    settings.write("D6", "休日シートに日付を追加すると、予定終了日から除外されます。")
+    settings.write("D6", "VBAの InputWBSRow で選択行へ入力ダイアログを表示できます。")
+    settings.write("D7", "休日シートに日付を追加すると、予定終了日から除外されます。")
     settings.set_column("A:A", 18)
     settings.set_column("B:B", 24)
     settings.set_column("D:D", 85)
@@ -88,8 +90,9 @@ def build_workbook():
     headers = ["ID", "階層", "タスク名", "担当", "種別", "予定開始", "予定日数", "予定終了", "実績開始", "実績終了", "進捗率", "先行ID", "開始遅れ", "終了遅れ", "工数", "備考", "状態"]
     wbs.write_row(4, 0, headers, header)
     for col in range(CALENDAR_START_COL, CALENDAR_START_COL + DATE_COUNT):
-        current = DATE_START + timedelta(days=col - CALENDAR_START_COL)
-        wbs.write_datetime(3, col, current, calendar_header)
+        offset = col - CALENDAR_START_COL
+        current = DATE_START + timedelta(days=offset)
+        wbs.write_datetime(3, col, current, workbook.add_format({"bold": True, "font_color": "white", "bg_color": navy, "border": 1, "border_color": grid, "align": "center", "num_format": "m月"}))
         wbs.write_datetime(4, col, current, calendar_header)
         wbs.set_column(col, col, 3.2)
     wbs.set_row(0, 32)

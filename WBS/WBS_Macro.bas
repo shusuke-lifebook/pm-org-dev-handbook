@@ -7,6 +7,7 @@ Private Const SETTINGS_SHEET As String = "設定"
 Private Const FIRST_TASK_ROW As Long = 6
 Private Const LAST_TASK_ROW As Long = 105
 Private Const FIRST_DATE_COL As Long = 18
+Private Const LAST_DATE_COL As Long = 383
 
 Public Sub RefreshWBS()
     Application.ScreenUpdating = False
@@ -14,7 +15,9 @@ Public Sub RefreshWBS()
     On Error GoTo CleanFail
 
     CalculateSchedule
+    UpdateCalendarHeaders
     DrawLightningLine
+    Worksheets(SETTINGS_SHEET).Calculate
     Worksheets(WBS_SHEET).Calculate
     Application.EnableEvents = True
     Application.ScreenUpdating = True
@@ -25,6 +28,77 @@ CleanFail:
     Application.EnableEvents = True
     Application.ScreenUpdating = True
     MsgBox "再計算中にエラーが発生しました: " & Err.Description, vbExclamation
+End Sub
+
+Public Sub InputWBSRow()
+    Dim ws As Worksheet
+    Dim targetRow As Long
+    Dim taskName As String, owner As String, taskType As String
+    Dim startText As String, durationText As String, progressText As String
+    Dim predecessor As String, note As String
+
+    Set ws = Worksheets(WBS_SHEET)
+    targetRow = ActiveCell.Row
+    If targetRow < FIRST_TASK_ROW Or targetRow > LAST_TASK_ROW Then
+        targetRow = FirstEmptyTaskRow(ws)
+    End If
+
+    taskName = InputBox("タスク名を入力してください。", "WBS入力", CStr(ws.Cells(targetRow, 3).Value))
+    If Len(taskName) = 0 Then Exit Sub
+    owner = InputBox("担当者を入力してください。", "WBS入力", CStr(ws.Cells(targetRow, 4).Value))
+    taskType = InputBox("種別を入力してください（フェーズ / タスク / マイルストーン）。", "WBS入力", CStr(ws.Cells(targetRow, 5).Value))
+    If Len(taskType) = 0 Then taskType = "タスク"
+    startText = InputBox("予定開始日を入力してください（yyyy/m/d）。", "WBS入力", Format$(ws.Cells(targetRow, 6).Value, "yyyy/m/d"))
+    durationText = InputBox("予定日数を入力してください。", "WBS入力", CStr(ws.Cells(targetRow, 7).Value))
+    progressText = InputBox("進捗率を0から100の数値で入力してください。", "WBS入力", CStr(ws.Cells(targetRow, 11).Value * 100))
+    predecessor = InputBox("先行IDを入力してください（任意）。", "WBS入力", CStr(ws.Cells(targetRow, 12).Value))
+    note = InputBox("備考を入力してください（任意）。", "WBS入力", CStr(ws.Cells(targetRow, 16).Value))
+
+    If IsDate(startText) Then ws.Cells(targetRow, 6).Value = CDate(startText)
+    If IsNumeric(durationText) Then ws.Cells(targetRow, 7).Value = CDbl(durationText)
+    If IsNumeric(progressText) Then ws.Cells(targetRow, 11).Value = WorksheetFunction.Min(100, WorksheetFunction.Max(0, CDbl(progressText))) / 100
+    ws.Cells(targetRow, 3).Value = taskName
+    ws.Cells(targetRow, 4).Value = owner
+    ws.Cells(targetRow, 5).Value = taskType
+    ws.Cells(targetRow, 12).Value = predecessor
+    ws.Cells(targetRow, 16).Value = note
+    RefreshWBS
+End Sub
+
+Public Sub SetProjectPeriod()
+    Dim startText As String, endText As String
+    startText = InputBox("プロジェクト開始月を入力してください（yyyy/m）。", "プロジェクト期間", Format$(Worksheets(SETTINGS_SHEET).Range("B4").Value, "yyyy/m"))
+    If Len(startText) = 0 Or Not IsDate(startText) Then Exit Sub
+    endText = InputBox("プロジェクト終了月を入力してください（yyyy/m）。", "プロジェクト期間", Format$(Worksheets(SETTINGS_SHEET).Range("B5").Value, "yyyy/m"))
+    If Len(endText) = 0 Or Not IsDate(endText) Then Exit Sub
+    If DateSerial(Year(CDate(endText)), Month(CDate(endText)), 1) < DateSerial(Year(CDate(startText)), Month(CDate(startText)), 1) Then
+        MsgBox "終了月は開始月以降を指定してください。", vbExclamation
+        Exit Sub
+    End If
+    Worksheets(SETTINGS_SHEET).Range("B4").Value = DateSerial(Year(CDate(startText)), Month(CDate(startText)), 1)
+    Worksheets(SETTINGS_SHEET).Range("B5").Value = DateSerial(Year(CDate(endText)), Month(CDate(endText)), 1)
+    UpdateCalendarHeaders
+    Worksheets(WBS_SHEET).Calculate
+    DrawLightningLine
+    MsgBox "ガントチャートの表示期間を更新しました。", vbInformation
+End Sub
+
+Public Sub UpdateCalendarHeaders()
+    Dim ws As Worksheet, startMonth As Date, endMonth As Date
+    Dim currentDate As Date, col As Long
+    Set ws = Worksheets(WBS_SHEET)
+    startMonth = DateSerial(Year(Worksheets(SETTINGS_SHEET).Range("B4").Value), Month(Worksheets(SETTINGS_SHEET).Range("B4").Value), 1)
+    endMonth = DateSerial(Year(Worksheets(SETTINGS_SHEET).Range("B5").Value), Month(Worksheets(SETTINGS_SHEET).Range("B5").Value) + 1, 0)
+    For col = FIRST_DATE_COL To LAST_DATE_COL
+        currentDate = DateAdd("d", col - FIRST_DATE_COL, startMonth)
+        If currentDate <= endMonth Then
+            ws.Cells(4, col).Value = currentDate
+            ws.Cells(5, col).Value = currentDate
+        Else
+            ws.Cells(4, col).ClearContents
+            ws.Cells(5, col).ClearContents
+        End If
+    Next col
 End Sub
 
 Public Sub CalculateSchedule()
@@ -121,6 +195,17 @@ Private Function FindTaskRow(ByVal taskId As String) As Long
         End If
     Next row
     FindTaskRow = 0
+End Function
+
+Private Function FirstEmptyTaskRow(ByVal ws As Worksheet) As Long
+    Dim row As Long
+    For row = FIRST_TASK_ROW To LAST_TASK_ROW
+        If Len(ws.Cells(row, 3).Value) = 0 Then
+            FirstEmptyTaskRow = row
+            Exit Function
+        End If
+    Next row
+    FirstEmptyTaskRow = FIRST_TASK_ROW
 End Function
 
 Private Function HolidayRange() As Range
