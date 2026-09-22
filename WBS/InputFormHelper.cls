@@ -31,64 +31,64 @@ Public Function ShowForTask(ByVal targetRow As Long, ByVal taskType As String) A
     Set ws = Worksheets("WBS")
     EnsureForm
     Set form = UserForms.Add("WBSInputForm")
-    form.Caption = "WBSå…¥åŠ›è£œåŠ©"
+    form.Caption = "WBS“ü—Í•â•"
     form.Width = 440
     form.Height = 380
     form.StartUpPosition = 1
 
-    AddLabel "lblTitle", "å…¥åŠ›è£œåŠ©", 20, 12, 200, 18
-    AddLabel "lblTaskName", "ã‚¿ã‚¹ã‚¯å", 20, 42, 90, 18
+    AddLabel "lblTitle", "“ü—Í•â•", 20, 12, 200, 18
+    AddLabel "lblTaskName", "ƒ^ƒXƒN–¼", 20, 42, 90, 18
     Set txtTaskName = AddTextBox("txtTaskName", 120, 36, 280, 24)
     txtTaskName.Text = CStr(ws.Cells(selectedRow, 3).Value)
 
-    AddLabel "lblOwner", "æ‹…å½“", 20, 74, 90, 18
+    AddLabel "lblOwner", "’S“–", 20, 74, 90, 18
     Set txtOwner = AddTextBox("txtOwner", 120, 68, 280, 24)
     txtOwner.Text = CStr(ws.Cells(selectedRow, 4).Value)
 
-    AddLabel "lblType", "ç¨®åˆ¥", 20, 106, 90, 18
+    AddLabel "lblType", "Ží•Ê", 20, 106, 90, 18
     Set txtType = AddComboBox("cmbType", 120, 100, 280, 24)
-    txtType.AddItem "ãƒ•ã‚§ãƒ¼ã‚º"
-    txtType.AddItem "ã‚¿ã‚¹ã‚¯"
-    txtType.AddItem "ãƒžã‚¤ãƒ«ã‚¹ãƒˆãƒ¼ãƒ³"
+    txtType.AddItem "ƒtƒF[ƒY"
+    txtType.AddItem "ƒ^ƒXƒN"
+    txtType.AddItem "ƒ}ƒCƒ‹ƒXƒg[ƒ“"
     txtType.Text = selectedTaskType
     txtType.Enabled = False
 
-    AddLabel "lblStart", "é–‹å§‹æ—¥", 20, 138, 90, 18
+    AddLabel "lblStart", "ŠJŽn“ú", 20, 138, 90, 18
     Set txtStart = AddTextBox("txtStart", 120, 132, 280, 24)
     If IsDate(ws.Cells(selectedRow, 6).Value) Then
         txtStart.Text = Format$(ws.Cells(selectedRow, 6).Value, "yyyy/m/d")
     End If
 
-    AddLabel "lblDuration", "æ—¥æ•°", 20, 170, 90, 18
+    AddLabel "lblDuration", "“ú”", 20, 170, 90, 18
     Set txtDuration = AddTextBox("txtDuration", 120, 164, 280, 24)
     If IsNumeric(ws.Cells(selectedRow, 7).Value) Then
         txtDuration.Text = CStr(ws.Cells(selectedRow, 7).Value)
     End If
-    If selectedTaskType = "ãƒžã‚¤ãƒ«ã‚¹ãƒˆãƒ¼ãƒ³" Then
+    If selectedTaskType = "ƒ}ƒCƒ‹ƒXƒg[ƒ“" Then
         txtDuration.Text = "1"
     End If
 
-    AddLabel "lblProgress", "é€²æ—çŽ‡", 20, 202, 90, 18
+    AddLabel "lblProgress", "i’»—¦", 20, 202, 90, 18
     Set txtProgress = AddTextBox("txtProgress", 120, 196, 280, 24)
     If IsNumeric(ws.Cells(selectedRow, 11).Value) Then
         txtProgress.Text = Format$(ws.Cells(selectedRow, 11).Value * 100, "0")
     End If
-    If selectedTaskType = "ãƒžã‚¤ãƒ«ã‚¹ãƒˆãƒ¼ãƒ³" Then
+    If selectedTaskType = "ƒ}ƒCƒ‹ƒXƒg[ƒ“" Then
         txtProgress.Visible = False
         form.Controls("lblProgress").Visible = False
     End If
 
-    AddLabel "lblPredecessor", "å…ˆè¡ŒID", 20, 234, 90, 18
+    AddLabel "lblPredecessor", "æsID", 20, 234, 90, 18
     Set txtPredecessor = AddTextBox("txtPredecessor", 120, 228, 280, 24)
     txtPredecessor.Text = CStr(ws.Cells(selectedRow, 12).Value)
 
-    AddLabel "lblNote", "å‚™è€ƒ", 20, 266, 90, 18
+    AddLabel "lblNote", "”õl", 20, 266, 90, 18
     Set txtNote = AddTextBox("txtNote", 120, 260, 280, 54)
     txtNote.MultiLine = True
     txtNote.Text = CStr(ws.Cells(selectedRow, 16).Value)
 
-    Set okButton = AddCommandButton("cmdOK", "å…¥åŠ›ã™ã‚‹", 210, 330, 90, 26)
-    Set cancelButton = AddCommandButton("cmdCancel", "ã‚­ãƒ£ãƒ³ã‚»ãƒ«", 320, 330, 90, 26)
+    Set okButton = AddCommandButton("cmdOK", "“ü—Í‚·‚é", 210, 330, 90, 26)
+    Set cancelButton = AddCommandButton("cmdCancel", "ƒLƒƒƒ“ƒZƒ‹", 320, 330, 90, 26)
 
     form.Show
 
@@ -176,10 +176,10 @@ Private Sub ApplyValues(ByVal taskType As String)
     If Len(Trim$(txtDuration.Text)) > 0 Then
         If IsNumeric(txtDuration.Text) Then
             durationValue = CDbl(txtDuration.Text)
-            If taskType = "ãƒžã‚¤ãƒ«ã‚¹ãƒˆãƒ¼ãƒ³" And durationValue <= 0 Then durationValue = 1
+            If taskType = "ƒ}ƒCƒ‹ƒXƒg[ƒ“" And durationValue <= 0 Then durationValue = 1
             ws.Cells(selectedRow, 7).Value = durationValue
         End If
-    ElseIf taskType = "ãƒžã‚¤ãƒ«ã‚¹ãƒˆãƒ¼ãƒ³" Then
+    ElseIf taskType = "ƒ}ƒCƒ‹ƒXƒg[ƒ“" Then
         ws.Cells(selectedRow, 7).Value = 1
     End If
 
@@ -194,7 +194,7 @@ End Sub
 
 Private Sub okButton_Click()
     If Len(Trim$(txtTaskName.Text)) = 0 Then
-        MsgBox "ã‚¿ã‚¹ã‚¯åã‚’å…¥åŠ›ã—ã¦ãã ã•ã„ã€‚", vbExclamation
+        MsgBox "ƒ^ƒXƒN–¼‚ð“ü—Í‚µ‚Ä‚­‚¾‚³‚¢B", vbExclamation
         Exit Sub
     End If
     isCancelled = False

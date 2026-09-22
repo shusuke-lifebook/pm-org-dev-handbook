@@ -2,8 +2,8 @@ Attribute VB_Name = "WBS_Macro"
 Option Explicit
 
 Private Const WBS_SHEET As String = "WBS"
-Private Const HOLIDAY_SHEET As String = "ä¼‘æ—¥"
-Private Const SETTINGS_SHEET As String = "è¨­å®š"
+Private Const HOLIDAY_SHEET As String = "‹x“ú"
+Private Const SETTINGS_SHEET As String = "İ’è"
 Private Const FIRST_TASK_ROW As Long = 6
 Private Const LAST_TASK_ROW As Long = 105
 Private Const FIRST_DATE_COL As Long = 18
@@ -21,13 +21,13 @@ Public Sub RefreshWBS()
     Worksheets(WBS_SHEET).Calculate
     Application.EnableEvents = True
     Application.ScreenUpdating = True
-    MsgBox "WBSã‚’å†è¨ˆç®—ã—ã¾ã—ãŸã€‚äºˆå®šãƒ»å®Ÿç¸¾ãƒ»ã‚«ãƒŸãƒŠãƒªæˆ¦ã‚’ç¢ºèªã—ã¦ãã ã•ã„ã€‚", vbInformation
+    MsgBox "WBS‚ğÄŒvZ‚µ‚Ü‚µ‚½B—\’èEÀÑEƒJƒ~ƒiƒŠí‚ğŠm”F‚µ‚Ä‚­‚¾‚³‚¢B", vbInformation
     Exit Sub
 
 CleanFail:
     Application.EnableEvents = True
     Application.ScreenUpdating = True
-    MsgBox "å†è¨ˆç®—ä¸­ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ: " & Err.Description, vbExclamation
+    MsgBox "ÄŒvZ’†‚ÉƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½: " & Err.Description, vbExclamation
 End Sub
 
 Public Sub InputWBSRow()
@@ -43,7 +43,7 @@ Public Sub InputWBSRow()
     End If
 
     taskType = Trim$(CStr(ws.Cells(targetRow, 5).Value))
-    If Len(taskType) = 0 Then taskType = "ã‚¿ã‚¹ã‚¯"
+    If Len(taskType) = 0 Then taskType = "ƒ^ƒXƒN"
 
     Set helper = New InputFormHelper
     If helper.ShowForTask(targetRow, taskType) Then
@@ -53,12 +53,12 @@ End Sub
 
 Public Sub SetProjectPeriod()
     Dim startText As String, endText As String
-    startText = InputBox("ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆé–‹å§‹æœˆã‚’å…¥åŠ›ã—ã¦ãã ã•ã„ï¼ˆyyyy/mï¼‰ã€‚", "ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆæœŸé–“", Format$(Worksheets(SETTINGS_SHEET).Range("B4").Value, "yyyy/m"))
+    startText = InputBox("ƒvƒƒWƒFƒNƒgŠJnŒ‚ğ“ü—Í‚µ‚Ä‚­‚¾‚³‚¢iyyyy/mjB", "ƒvƒƒWƒFƒNƒgŠúŠÔ", Format$(Worksheets(SETTINGS_SHEET).Range("B4").Value, "yyyy/m"))
     If Len(startText) = 0 Or Not IsDate(startText) Then Exit Sub
-    endText = InputBox("ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆçµ‚äº†æœˆã‚’å…¥åŠ›ã—ã¦ãã ã•ã„ï¼ˆyyyy/mï¼‰ã€‚", "ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆæœŸé–“", Format$(Worksheets(SETTINGS_SHEET).Range("B5").Value, "yyyy/m"))
+    endText = InputBox("ƒvƒƒWƒFƒNƒgI—¹Œ‚ğ“ü—Í‚µ‚Ä‚­‚¾‚³‚¢iyyyy/mjB", "ƒvƒƒWƒFƒNƒgŠúŠÔ", Format$(Worksheets(SETTINGS_SHEET).Range("B5").Value, "yyyy/m"))
     If Len(endText) = 0 Or Not IsDate(endText) Then Exit Sub
     If DateSerial(Year(CDate(endText)), Month(CDate(endText)), 1) < DateSerial(Year(CDate(startText)), Month(CDate(startText)), 1) Then
-        MsgBox "çµ‚äº†æœˆã¯é–‹å§‹æœˆä»¥é™ã‚’æŒ‡å®šã—ã¦ãã ã•ã„ã€‚", vbExclamation
+        MsgBox "I—¹Œ‚ÍŠJnŒˆÈ~‚ğw’è‚µ‚Ä‚­‚¾‚³‚¢B", vbExclamation
         Exit Sub
     End If
     Worksheets(SETTINGS_SHEET).Range("B4").Value = DateSerial(Year(CDate(startText)), Month(CDate(startText)), 1)
@@ -66,7 +66,7 @@ Public Sub SetProjectPeriod()
     UpdateCalendarHeaders
     Worksheets(WBS_SHEET).Calculate
     DrawLightningLine
-    MsgBox "ã‚¬ãƒ³ãƒˆãƒãƒ£ãƒ¼ãƒˆã®è¡¨ç¤ºæœŸé–“ã‚’æ›´æ–°ã—ã¾ã—ãŸã€‚", vbInformation
+    MsgBox "ƒKƒ“ƒgƒ`ƒƒ[ƒg‚Ì•\¦ŠúŠÔ‚ğXV‚µ‚Ü‚µ‚½B", vbInformation
 End Sub
 
 Public Sub UpdateCalendarHeaders()
@@ -134,7 +134,7 @@ Public Sub AddWBSRow()
     ws.Range(ws.Cells(insertAt, 6), ws.Cells(insertAt, 7)).ClearContents
     ws.Range(ws.Cells(insertAt, 9), ws.Cells(insertAt, 12)).ClearContents
     ws.Range(ws.Cells(insertAt, 15), ws.Cells(insertAt, 16)).ClearContents
-    MsgBox "å…¥åŠ›è¡Œã‚’è¿½åŠ ã—ã¾ã—ãŸã€‚é»„è‰²ã®ã‚»ãƒ«ã«å…¥åŠ›ã—ã¦ãã ã•ã„ã€‚", vbInformation
+    MsgBox "“ü—Ís‚ğ’Ç‰Á‚µ‚Ü‚µ‚½B‰©F‚ÌƒZƒ‹‚É“ü—Í‚µ‚Ä‚­‚¾‚³‚¢B", vbInformation
 End Sub
 
 Public Sub DrawLightningLine()
@@ -166,10 +166,10 @@ End Sub
 
 Public Sub ExportWBSAsPDF()
     Dim path As String
-    path = ThisWorkbook.Path & Application.PathSeparator & "é–‹ç™ºãƒã‚¤ãƒ«ã‚¹ãƒˆãƒ¼ãƒ³_WBS.pdf"
+    path = ThisWorkbook.Path & Application.PathSeparator & "ŠJ”­ƒ}ƒCƒ‹ƒXƒg[ƒ“_WBS.pdf"
     Worksheets(WBS_SHEET).ExportAsFixedFormat Type:=xlTypePDF, Filename:=path, Quality:=xlQualityStandard, _
         IncludeDocProperties:=True, IgnorePrintAreas:=False, OpenAfterPublish:=False
-    MsgBox "PDFã‚’å‡ºåŠ›ã—ã¾ã—ãŸ: " & path, vbInformation
+    MsgBox "PDF‚ğo—Í‚µ‚Ü‚µ‚½: " & path, vbInformation
 End Sub
 
 Private Function FindTaskRow(ByVal taskId As String) As Long
