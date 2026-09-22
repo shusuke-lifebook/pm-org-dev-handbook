@@ -33,9 +33,8 @@ End Sub
 Public Sub InputWBSRow()
     Dim ws As Worksheet
     Dim targetRow As Long
-    Dim taskName As String, owner As String, taskType As String
-    Dim startText As String, durationText As String, progressText As String
-    Dim predecessor As String, note As String
+    Dim taskType As String
+    Dim helper As InputFormHelper
 
     Set ws = Worksheets(WBS_SHEET)
     targetRow = ActiveCell.Row
@@ -43,26 +42,13 @@ Public Sub InputWBSRow()
         targetRow = FirstEmptyTaskRow(ws)
     End If
 
-    taskName = InputBox("タスク名を入力してください。", "WBS入力", CStr(ws.Cells(targetRow, 3).Value))
-    If Len(taskName) = 0 Then Exit Sub
-    owner = InputBox("担当者を入力してください。", "WBS入力", CStr(ws.Cells(targetRow, 4).Value))
-    taskType = InputBox("種別を入力してください（フェーズ / タスク / マイルストーン）。", "WBS入力", CStr(ws.Cells(targetRow, 5).Value))
+    taskType = Trim$(CStr(ws.Cells(targetRow, 5).Value))
     If Len(taskType) = 0 Then taskType = "タスク"
-    startText = InputBox("予定開始日を入力してください（yyyy/m/d）。", "WBS入力", Format$(ws.Cells(targetRow, 6).Value, "yyyy/m/d"))
-    durationText = InputBox("予定日数を入力してください。", "WBS入力", CStr(ws.Cells(targetRow, 7).Value))
-    progressText = InputBox("進捗率を0から100の数値で入力してください。", "WBS入力", CStr(ws.Cells(targetRow, 11).Value * 100))
-    predecessor = InputBox("先行IDを入力してください（任意）。", "WBS入力", CStr(ws.Cells(targetRow, 12).Value))
-    note = InputBox("備考を入力してください（任意）。", "WBS入力", CStr(ws.Cells(targetRow, 16).Value))
 
-    If IsDate(startText) Then ws.Cells(targetRow, 6).Value = CDate(startText)
-    If IsNumeric(durationText) Then ws.Cells(targetRow, 7).Value = CDbl(durationText)
-    If IsNumeric(progressText) Then ws.Cells(targetRow, 11).Value = WorksheetFunction.Min(100, WorksheetFunction.Max(0, CDbl(progressText))) / 100
-    ws.Cells(targetRow, 3).Value = taskName
-    ws.Cells(targetRow, 4).Value = owner
-    ws.Cells(targetRow, 5).Value = taskType
-    ws.Cells(targetRow, 12).Value = predecessor
-    ws.Cells(targetRow, 16).Value = note
-    RefreshWBS
+    Set helper = New InputFormHelper
+    If helper.ShowForTask(targetRow, taskType) Then
+        RefreshWBS
+    End If
 End Sub
 
 Public Sub SetProjectPeriod()
@@ -87,8 +73,8 @@ Public Sub UpdateCalendarHeaders()
     Dim ws As Worksheet, startMonth As Date, endMonth As Date
     Dim currentDate As Date, col As Long
     Set ws = Worksheets(WBS_SHEET)
-    startMonth = DateSerial(Year(Worksheets(SETTINGS_SHEET).Range("B4").Value), Month(Worksheets(SETTINGS_SHEET).Range("B4").Value), 1)
-    endMonth = DateSerial(Year(Worksheets(SETTINGS_SHEET).Range("B5").Value), Month(Worksheets(SETTINGS_SHEET).Range("B5").Value) + 1, 0)
+    startMonth = DateSerial(Year(Worksheets(SETTINGS_SHEET).Range("B4").Value), Month(Worksheets(SETTINGS_SHEET).Range("B4").Value) - 1, 1)
+    endMonth = DateSerial(Year(Worksheets(SETTINGS_SHEET).Range("B5").Value), Month(Worksheets(SETTINGS_SHEET).Range("B5").Value) + 2, 0)
     For col = FIRST_DATE_COL To LAST_DATE_COL
         currentDate = DateAdd("d", col - FIRST_DATE_COL, startMonth)
         If currentDate <= endMonth Then

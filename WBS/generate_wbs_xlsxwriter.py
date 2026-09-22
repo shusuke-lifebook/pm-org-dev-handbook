@@ -63,8 +63,9 @@ def build_workbook():
     settings.write("D3", "操作", label)
     settings.write("D4", "開始月・終了月を変更すると、ガントの日付範囲が連動します。")
     settings.write("D5", "VBAの AddWBSRow で入力行を追加できます。")
-    settings.write("D6", "VBAの InputWBSRow で選択行へ入力ダイアログを表示できます。")
-    settings.write("D7", "休日シートに日付を追加すると、予定終了日から除外されます。")
+    settings.write("D6", "VBAの InputWBSRow で種類別フォームが開き、当該行を補助します。")
+    settings.write("D7", "フェーズ / タスク / マイルストーンの入力フォームで、各行の情報を段階的に入力できます。")
+    settings.write("D8", "休日シートに日付を追加すると、予定終了日から除外されます。")
     settings.set_column("A:A", 18)
     settings.set_column("B:B", 24)
     settings.set_column("D:D", 85)
@@ -113,10 +114,19 @@ def build_workbook():
     for row in range(TASK_START, TASK_END + 1):
         values = sample[row - TASK_START] if row - TASK_START < len(sample) else (None,) * 13
         task_id, level, name, owner, task_type, start, days, actual_start, actual_end, progress, predecessor, effort, note = values
+        level_indent = int(level) if isinstance(level, (int, float)) else 0
         row_format = phase_text if task_type == "フェーズ" else milestone_text if task_type == "マイルストーン" else input_text
+        task_name_format = workbook.add_format({
+            "border": 1,
+            "border_color": grid,
+            "indent": level_indent,
+            **({"bold": True, "font_color": navy} if task_type == "フェーズ" else {}),
+            **({"bg_color": light_orange} if task_type == "マイルストーン" else {}),
+            **({"bg_color": input_yellow, "valign": "vcenter"} if task_type not in {"フェーズ", "マイルストーン"} else {}),
+        })
         wbs.write(row, 0, task_id, row_format)
         wbs.write(row, 1, level, row_format)
-        wbs.write(row, 2, name, row_format)
+        wbs.write(row, 2, name, task_name_format)
         wbs.write(row, 3, owner, row_format)
         wbs.write(row, 4, task_type, row_format)
         if start:
