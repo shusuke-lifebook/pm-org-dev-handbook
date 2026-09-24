@@ -19,6 +19,11 @@
   "git.autofetch": true,
   "git.autofetchPeriod": 180,
 
+  // -- Copilotのビープ音を無効化
+  "accessibility.signals.chatEditModifiedFile": { "sound": "off" },
+  "accessibility.signals.chatResponseReceived": { "sound": "off" },
+  "accessibility.signals.chatUserActionRequired": { "sound": "off" },
+
   // --- Markdown 専用設定 ---
   "[markdown]": {
     "editor.insertSpaces": true,
